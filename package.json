@@ -14,8 +14,12 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.11.5",
+    "@types/uuid": "^9.0.7",
     "nodemon": "^3.0.3",
     "prettier": "^3.2.4",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "uuid": "^9.0.1"
   }
 }
