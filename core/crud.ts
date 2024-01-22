@@ -1,5 +1,5 @@
 import fs from "fs";
-import { v4 as uuid } from "uuid"
+import { v4 as uuid } from "uuid";
 
 const DB_FILE_PATH = "./core/db";
 
@@ -9,7 +9,7 @@ function createDB() {
   fs.writeFileSync(DB_FILE_PATH, JSON.stringify({}));
 }
 
-type UUID = string
+type UUID = string;
 
 interface Todo {
   id: UUID;
@@ -40,31 +40,34 @@ function read(): Array<Todo> {
 }
 
 function find(id: UUID): Todo | {} {
-  const allTodos = read()
-  const todo = allTodos.find(todo => todo.id == id)
-  return todo ? todo : {}
+  const allTodos = read();
+  const todo = allTodos.find((todo) => todo.id == id);
+  return todo ? todo : {};
 }
 
 function update(id: UUID, partialTodo: Partial<Todo>): Todo {
-  const allTodos = read()
-  const indexTodo = allTodos.findIndex(todo => todo.id == id)
-  
-  const todoNotExist = indexTodo == -1
-  if(todoNotExist) throw new Error("Invalid ID");  
+  const allTodos = read();
+  const indexTodo = allTodos.findIndex((todo) => todo.id == id);
 
-  const todoUpdated = Object.assign(allTodos[indexTodo], partialTodo)
+  const todoNotExist = indexTodo == -1;
+  if (todoNotExist) throw new Error("Invalid ID");
+
+  const todoUpdated = Object.assign(allTodos[indexTodo], partialTodo);
   fs.writeFileSync(DB_FILE_PATH, JSON.stringify({ todos: allTodos }, null, 2));
-  return todoUpdated
+  return todoUpdated;
 }
 
 function updateContentById(id: UUID, content: string): Todo {
-  return update(id, { content })
+  return update(id, { content });
 }
 
 function remove(id: UUID) {
-  const allTodos = read()
-  const filterTodos = allTodos.filter(todo => todo.id != id)
-  fs.writeFileSync(DB_FILE_PATH, JSON.stringify({ todos: filterTodos }, null, 2));
+  const allTodos = read();
+  const filterTodos = allTodos.filter((todo) => todo.id != id);
+  fs.writeFileSync(
+    DB_FILE_PATH,
+    JSON.stringify({ todos: filterTodos }, null, 2),
+  );
 }
 
 createDB();
@@ -73,7 +76,9 @@ create("Concluir read");
 const deleteTodo = create("Delete");
 const todo = create("Concluir");
 
-update(todo.id, { content: "Concluir up" })
-updateContentById(todo.id,  "Concluir update")
+update(todo.id, { content: "Concluir up" });
+updateContentById(todo.id, "Concluir update");
 
-remove(deleteTodo.id)  
+remove(deleteTodo.id);
+
+export { read };
