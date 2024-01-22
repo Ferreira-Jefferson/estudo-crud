@@ -1,4 +1,4 @@
-import { GlobalStyles } from "../src/theme/GlobalStyles";
+import { GlobalStyles } from "@ui/theme/GlobalStyles";
 
 export default function Page() {
   return (
