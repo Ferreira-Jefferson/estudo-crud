@@ -4,7 +4,7 @@
   "description": "Repositório para estudo do curso `CRUD's com Qualidade` do DevSoltinho",
   "main": "index.js",
   "scripts": {
-    "dev": "node index.js",
+    "dev": "nodemon index.js",
     "lint:fix": "prettier --write .",
     "lint:check": "prettier --check ."
   },
@@ -12,6 +12,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "nodemon": "^3.0.3",
     "prettier": "^3.2.4"
   }
 }
