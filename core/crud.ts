@@ -9,8 +9,10 @@ function createDB() {
   fs.writeFileSync(DB_FILE_PATH, JSON.stringify({}));
 }
 
+type UUID = string
+
 interface Todo {
-  id: string;
+  id: UUID;
   date: string;
   content: string;
   done: boolean;
@@ -37,13 +39,13 @@ function read(): Array<Todo> {
   return db.todos;
 }
 
-function find(id: string): Todo | {} {
+function find(id: UUID): Todo | {} {
   const allTodos = read()
   const todo = allTodos.find(todo => todo.id == id)
   return todo ? todo : {}
 }
 
-function update(id: string, partialTodo: Partial<Todo>): Todo {
+function update(id: UUID, partialTodo: Partial<Todo>): Todo {
   const allTodos = read()
   const indexTodo = allTodos.findIndex(todo => todo.id == id)
   
@@ -55,13 +57,23 @@ function update(id: string, partialTodo: Partial<Todo>): Todo {
   return todoUpdated
 }
 
-function updateContentById(id: string, content: string): Todo {
+function updateContentById(id: UUID, content: string): Todo {
   return update(id, { content })
+}
+
+function remove(id: UUID) {
+  const allTodos = read()
+  const filterTodos = allTodos.filter(todo => todo.id != id)
+  fs.writeFileSync(DB_FILE_PATH, JSON.stringify({ todos: filterTodos }, null, 2));
 }
 
 createDB();
 create("Concluir create");
 create("Concluir read");
+const deleteTodo = create("Delete");
 const todo = create("Concluir");
+
 update(todo.id, { content: "Concluir up" })
 updateContentById(todo.id,  "Concluir update")
+
+remove(deleteTodo.id)  
