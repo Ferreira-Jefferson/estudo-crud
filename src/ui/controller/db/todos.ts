@@ -5,6 +5,6 @@ function get() {
   return allTodos;
 }
 
-export const todoController = {
+export const todoControllerDB = {
   get,
 };

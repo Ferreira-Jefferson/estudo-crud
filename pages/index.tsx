@@ -1,6 +1,39 @@
+import React from "react";
 import { GlobalStyles } from "@ui/theme/GlobalStyles";
+import { todoControllerApi } from "@ui/controller/api/todos";
+
+interface HomeTodo {
+  id: string;
+  content: string;
+}
+
+function criarTodoList(page: any) {
+  const [todos, setTodos] = React.useState<HomeTodo[]>([]);
+  React.useEffect(() => {
+    todoControllerApi.get({ page }).then(({ todos }) => {
+      setTodos(todos);
+    });
+  }, []);
+
+  return todos.map((todo) => (
+    <tr key={todo.id}>
+      <td>
+        <input type="checkbox" />
+      </td>
+      <td>{todo.id.substring(0, 5)}</td>
+      <td>{todo.content}</td>
+      <td align="right">
+        <button data-type="delete" data-id={todo.id}>
+          Apagar
+        </button>
+      </td>
+    </tr>
+  ));
+}
 
 export default function Page() {
+  const [page, setPage] = React.useState(1);
+
   return (
     <main>
       <GlobalStyles themeName="red" />
@@ -38,22 +71,7 @@ export default function Page() {
           </thead>
 
           <tbody>
-            <tr>
-              <td>
-                <input type="checkbox" />
-              </td>
-              <td>d4f26</td>
-              <td>
-                Conteúdo de uma TODO Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Eaque vero facilis obcaecati, autem aliquid
-                eius! Consequatur eaque doloribus laudantium soluta optio odit,
-                provident, ab voluptates doloremque voluptas recusandae
-                aspernatur aperiam.
-              </td>
-              <td align="right">
-                <button data-type="delete">Apagar</button>
-              </td>
-            </tr>
+            {criarTodoList(page)}
 
             <tr>
               <td colSpan={4} align="center" style={{ textAlign: "center" }}>
@@ -69,8 +87,8 @@ export default function Page() {
 
             <tr>
               <td colSpan={4} align="center" style={{ textAlign: "center" }}>
-                <button data-type="load-more">
-                  Carregar mais{" "}
+                <button data-type="load-more" onClick={() => setPage(page + 1)}>
+                  Página {page} | Carregar mais{" "}
                   <span
                     style={{
                       display: "inline-block",

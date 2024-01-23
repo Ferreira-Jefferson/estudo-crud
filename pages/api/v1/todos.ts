@@ -1,10 +1,9 @@
-import { todoController } from "@server/controller/todos";
+import { todoControllerDB } from "@ui/controller/db/todos";
 import { NextApiRequest, NextApiResponse } from "next";
 
 function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log(req.method);
   if (req.method == "GET") {
-    const todos = todoController.get();
+    const todos = todoControllerDB.get();
     return res.status(200).json({ todos });
   }
   res.status(405).json({

@@ -3,8 +3,6 @@ import { v4 as uuid } from "uuid";
 
 const DB_FILE_PATH = "./core/db";
 
-console.log("Crud");
-
 function createDB() {
   fs.writeFileSync(DB_FILE_PATH, JSON.stringify({}));
 }
