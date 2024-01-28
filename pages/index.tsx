@@ -7,13 +7,18 @@ interface HomeTodo {
   content: string;
 }
 
-function criarTodoList(page: any) {
-  const [todos, setTodos] = React.useState<HomeTodo[]>([]);
+function criarTodoList(
+  todos: HomeTodo[],
+  setTodos: React.Dispatch<React.SetStateAction<HomeTodo[]>>,
+  page: number,
+  setTotalPage: React.Dispatch<React.SetStateAction<number>>,
+) {
   React.useEffect(() => {
-    todoControllerApi.get({ page }).then(({ todos }) => {
-      setTodos(todos);
+    todoControllerApi.get({ page }).then(({ todos, pages }) => {
+      setTodos((oldTodos) => [...oldTodos, ...todos]);
+      setTotalPage(pages);
     });
-  }, []);
+  }, [page]);
 
   return todos.map((todo) => (
     <tr key={todo.id}>
@@ -32,7 +37,16 @@ function criarTodoList(page: any) {
 }
 
 export default function Page() {
+  const [todos, setTodos] = React.useState<HomeTodo[]>([]);
   const [page, setPage] = React.useState(1);
+  const [totalPage, setTotalPage] = React.useState(0);
+  const [search, setSearch] = React.useState("");
+  const homeTodos = todoControllerApi.filterTodosByContent<HomeTodo>(
+    todos,
+    search,
+  );
+
+  const hasMorePages = totalPage > page;
 
   return (
     <main>
@@ -55,7 +69,14 @@ export default function Page() {
 
       <section>
         <form>
-          <input type="text" placeholder="Filtrar lista atual, ex: Dentista" />
+          <input
+            type="text"
+            placeholder="Filtrar lista atual, ex: Dentista"
+            onChange={function handleSearch(ev) {
+              const search = ev.target.value.toLowerCase();
+              setSearch(search);
+            }}
+          />
         </form>
 
         <table border={1}>
@@ -71,36 +92,39 @@ export default function Page() {
           </thead>
 
           <tbody>
-            {criarTodoList(page)}
-
+            {criarTodoList(homeTodos, setTodos, page, setTotalPage)}
             <tr>
               <td colSpan={4} align="center" style={{ textAlign: "center" }}>
                 Carregando...
               </td>
             </tr>
-
             <tr>
               <td colSpan={4} align="center">
                 Nenhum item encontrado
               </td>
             </tr>
 
-            <tr>
-              <td colSpan={4} align="center" style={{ textAlign: "center" }}>
-                <button data-type="load-more" onClick={() => setPage(page + 1)}>
-                  Página {page} | Carregar mais{" "}
-                  <span
-                    style={{
-                      display: "inline-block",
-                      marginLeft: "4px",
-                      fontSize: "1.2em",
-                    }}
+            {hasMorePages && (
+              <tr>
+                <td colSpan={4} align="center" style={{ textAlign: "center" }}>
+                  <button
+                    data-type="load-more"
+                    onClick={() => setPage(page + 1)}
                   >
-                    ↓
-                  </span>
-                </button>
-              </td>
-            </tr>
+                    Página {page} | Carregar mais{" "}
+                    <span
+                      style={{
+                        display: "inline-block",
+                        marginLeft: "4px",
+                        fontSize: "1.2em",
+                      }}
+                    >
+                      ↓
+                    </span>
+                  </button>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </section>

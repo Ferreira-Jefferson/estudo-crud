@@ -1,20 +1,8 @@
-interface Todo {
-  id: string;
-  content: string;
-  date: Date;
-  done: boolean;
-}
-
-interface TodoRepositoryGetParams {
-  page: number;
-  limit: number;
-}
-
-interface TodoRepositoryGetOutput {
-  todos: Todo[];
-  total: number;
-  pages: number;
-}
+import {
+  Todo,
+  TodoRepositoryGetParams,
+  TodoRepositoryGetOutput,
+} from "@ui/model/todos";
 
 function getTodosOfPage(allTodos: Todo[], page: number, limit: number): Todo[] {
   const sanitizedPage = page > 0 ? page : 1;
